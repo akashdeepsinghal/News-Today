@@ -8,5 +8,5 @@ target 'News' do
   # Pods for News
   pod 'Alamofire', '~> 4.0'
   pod 'SwiftyJSON', '~> 3.1'
-
+  pod 'SVProgressHUD'
 end

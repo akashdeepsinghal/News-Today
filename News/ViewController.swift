@@ -13,61 +13,33 @@ import SwiftyJSON
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var heading: UILabel!
     @IBOutlet var newsTable: UITableView!
+    var arrRes = [[String:AnyObject]]() //Array of dictionary
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        Alamofire.request("https://webhose.io/search?token=563a1d2b-8de6-43e6-ba42-c924761cfd28&format=json&language=english").responseJSON{response in
-            if let NewsJSON = response.result.value as AnyObject? {
-                //print(JSON)
+        Alamofire.request("https://jsonplaceholder.typicode.com/posts").responseJSON { (responseData) -> Void in
+            if((responseData.result.value) != nil) {
+                let swiftyJsonVar = JSON(responseData.result.value!)
                 
-                let posts = JSON(NewsJSON)["posts"].arrayValue
-                //print(posts[0]["uuid"])
-                
-                //print(posts[0]["text"])
-                
-                let NewsTitles =  posts.map({$0["title"].stringValue})
-                let NewsDetails =  posts.map({$0["text"].stringValue})
-                
-                print(NewsTitles)
-                
-                func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-                    return posts.count
+                if let resData = swiftyJsonVar.arrayObject {
+                    self.arrRes = resData as! [[String:AnyObject]]
                 }
-                
-                func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-                    let cell = self.newsTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as!
-                    CustomCell
-                    
-                    cell.title.text = NewsTitles[indexPath.row]
-                    cell.newsText.text = NewsDetails[indexPath.row]
-                    
-                    return cell
+                if self.arrRes.count > 0 {
+                    self.newsTable.reloadData()
                 }
-                
             }
-            
-
         }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.newsTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as!
-        CustomCell
-        
-        cell.title.text = "Todays News"
-        cell.newsText.text = "Blah Blah"
-        
+        let cell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+        var dict = arrRes[indexPath.row]
+        cell.textLabel?.text = dict["name"] as? String
+        cell.detailTextLabel?.text = dict["email"] as? String
         return cell
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return arrRes.count
+    }
 }
