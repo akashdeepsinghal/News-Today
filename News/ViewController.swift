@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import SVProgressHUD
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var heading: UILabel!
@@ -16,6 +17,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var arrRes = [[String:AnyObject]]() //Array of dictionary
 
     override func viewDidLoad() {
+        SVProgressHUD.show()
         super.viewDidLoad()
         Alamofire.request("https://jsonplaceholder.typicode.com/posts").responseJSON { (responseData) -> Void in
             if((responseData.result.value) != nil) {
@@ -36,6 +38,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         var dict = arrRes[indexPath.row]
         cell.textLabel?.text = dict["name"] as? String
         cell.detailTextLabel?.text = dict["email"] as? String
+        SVProgressHUD.dismiss()
         return cell
     }
     
