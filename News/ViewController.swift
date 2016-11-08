@@ -34,10 +34,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+        let cell = self.newsTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as!
+        CustomCell
         var dict = arrRes[indexPath.row]
-        cell.textLabel?.text = dict["name"] as? String
-        cell.detailTextLabel?.text = dict["email"] as? String
+        cell.title.text = dict["title"] as? String
+        cell.newsText.text = dict["body"] as? String
         SVProgressHUD.dismiss()
         return cell
     }
