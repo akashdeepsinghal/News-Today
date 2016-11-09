@@ -19,11 +19,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         SVProgressHUD.show()
         super.viewDidLoad()
-        Alamofire.request("https://jsonplaceholder.typicode.com/posts").responseJSON { (responseData) -> Void in
+        Alamofire.request("https://newsapi.org/v1/articles?source=techcrunch&apiKey=1f4ebd7ef63a464c9ad2f68384c1aa05").responseJSON { (responseData) -> Void in
             if((responseData.result.value) != nil) {
                 let swiftyJsonVar = JSON(responseData.result.value!)
                 
-                if let resData = swiftyJsonVar.arrayObject {
+                if let resData = swiftyJsonVar["articles"].arrayObject {
                     self.arrRes = resData as! [[String:AnyObject]]
                 }
                 if self.arrRes.count > 0 {
@@ -38,7 +38,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         CustomCell
         var dict = arrRes[indexPath.row]
         cell.title.text = dict["title"] as? String
-        cell.newsText.text = dict["body"] as? String
+        cell.newsText.text = dict["description"] as? String
         SVProgressHUD.dismiss()
         return cell
     }
